@@ -16,7 +16,7 @@ from LR_models.LR_model import build_LR_model
 from LR_models.LR_model_left import build_LR_model_left
 from LR_models.LR_model_right import build_LR_model_right
 from LR_models.LR_model_left_right import build_LR_model_left_right
-from dls.DLS_model import build_DLS_model
+
 from eval import evaluate
 from mini_mdls.mini_mdls import build_mmdls_model
 from mini_mdls.mini_mdls_left import build_mmdls_model_left
