@@ -86,10 +86,10 @@ def evaluate_by_logits_key(model, dataloader, args, device):
             cap_soft = F.sigmoid(cap_logits)
             v_soft = F.sigmoid(v_logits)
             bl = save_true(joint_soft, target, device)
-            for j in range(4):
-                if bl[j]:
-                    pickle.dump((pred['att'][0][j], pred['att'][1][j], pred['att'][2][j]),
-                                open("result/s-dmls/att/att_" + str(question_ids[j])+ ".pkl", "wb"))
+            # for j in range(4):
+            #     if bl[j]:
+            #         pickle.dump((pred['att'][0][j], pred['att'][1][j], pred['att'][2][j]),
+            #                     open("result/s-dmls/att/att_" + str(question_ids[j])+ ".pkl", "wb"))
             pred0 = (joint_soft + cap_soft + v_soft) / 3
             pred1 = joint_soft * 0.4 + cap_soft * 0.3 + v_soft * 0.3
             pred2 = joint_soft * 0.5 + cap_soft * 0.25 + v_soft * 0.25

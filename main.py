@@ -381,10 +381,10 @@ if __name__ == '__main__':
 
         print("Unexpected_keys:", list(unexpected_keys))
         print("Missing_keys:", list(missing_keys))
-        # matched_state_dict['module.v_relation.v_transform.main.0.weight_v'] = F.pad(
-        #     matched_state_dict['module.v_relation.v_transform.main.0.weight_v'],
-        #     (0, 2054 - 2048,
-        #      0, 0))
+        matched_state_dict['module.v_relation.v_transform.main.0.weight_v'] = F.pad(
+            matched_state_dict['module.v_relation.v_transform.main.0.weight_v'],
+            (0, 2054 - 2048,
+             0, 0))
         matched_state_dict['module.joint_embedding.v_att.logits.h_bias'] = matched_state_dict[
             'module.joint_embedding.v_att.logits.h_bias'].repeat(1, 8, 1, 1)
         matched_state_dict['module.joint_embedding.v_att.logits.h_mat_v'] = matched_state_dict[
@@ -393,9 +393,9 @@ if __name__ == '__main__':
             'module.joint_L.v_att.logits.h_bias'].repeat(1, 8, 1, 1)
         matched_state_dict['module.joint_L.v_att.logits.h_mat_v'] = matched_state_dict[
             'module.joint_L.v_att.logits.h_mat_v'].repeat(1, 8, 1, 1)
-        # matched_state_dict['module.v_relation.implicit_relation_R.self_weights.main.1.weight_v'] = matched_state_dict[
-        #                                                                                                'module.v_relation.implicit_relation_R.self_weights.main.1.weight_v'][
-        #                                                                                            :, :1024]
+        matched_state_dict['module.v_relation.implicit_relation_R.self_weights.main.1.weight_v'] = matched_state_dict[
+                                                                                                       'module.v_relation.implicit_relation_R.self_weights.main.1.weight_v'][
+                                                                                                   :, :1024]
 
         matched_state_dict['module.joint_R.v_att.logits.h_bias'] = matched_state_dict[
             'module.joint_R.v_att.logits.h_bias'].repeat(1, 8, 1, 1)
