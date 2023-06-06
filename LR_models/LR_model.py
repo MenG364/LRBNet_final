@@ -21,8 +21,8 @@ from LR_models.language_model import WordEmbedding, TextEmbedding, \
 # from LR_models.relation_encoder_concat import ExplicitRelationEncoder, ImplicitRelationEncoder
 # from LR_models.relation_encoder_add import ExplicitRelationEncoder, ImplicitRelationEncoder
 #from LR_models.relation_encoder_multiply import ExplicitRelationEncoder, ImplicitRelationEncoder
-from mini_mdls.mmdls_relation_encoder import ImplicitRelationEncoder
-from LR_models.relation_encoder import ExplicitRelationEncoder#, ImplicitRelationEncoder
+# from mini_mdls.mmdls_relation_encoder import ImplicitRelationEncoder
+from LR_models.relation_encoder import ExplicitRelationEncoder,ImplicitRelationEncoder
 from ReGAT_models.fc import FCNet
 
 
