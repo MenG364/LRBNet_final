@@ -43,7 +43,15 @@ def evaluate_by_logits_key(model, dataloader, args, device):
     #     answer_ix_map = json.load(f)
     joint_loss, cap_loss, v_loss = 0, 0, 0
     all_preds = []
-    score0, score1, score2, score3, score4 = 0, 0, 0, 0, 0
+    score0 = 0
+    scores = {}
+    for i in range(0, 11, 2):
+        for j in range(0, 11, 2):
+            a = i / 10
+            b = j / 10
+            c = 1 - a - b
+            if a + b <= 1:
+                scores[str(a) + ',' + str(b) + ',' + "{:^2.1f}".format(c)] = 0
     num_examples = 0
     with tqdm(total=len(dataloader), ncols=120) as pbar:
         for i, (v, norm_bb, q, target, cap, question_types,
@@ -90,34 +98,31 @@ def evaluate_by_logits_key(model, dataloader, args, device):
             #     if bl[j]:
             #         pickle.dump((pred['att'][0][j], pred['att'][1][j], pred['att'][2][j]),
             #                     open("result/s-dmls/att/att_" + str(question_ids[j])+ ".pkl", "wb"))
+            for i in range(0, 11, 2):
+                for j in range(0, 11, 2):
+                    a = i / 10
+                    b = j / 10
+                    if a + b <= 1:
+                        c = 1 - a - b
+                        pred1 = joint_soft * a + cap_soft * b + v_soft * c
+                        scores[str(a) + ',' + str(b) + ',' + "{:^2.1f}".format(c)] += compute_score_with_logits(pred1,
+                                                                                                                target,
+                                                                                                                device).sum()
             pred0 = (joint_soft + cap_soft + v_soft) / 3
-            pred1 = joint_soft * 0.4 + cap_soft * 0.3 + v_soft * 0.3
-            pred2 = joint_soft * 0.5 + cap_soft * 0.25 + v_soft * 0.25
-            pred3 = joint_soft * 0.6 + cap_soft * 0.2 + v_soft * 0.2
-            pred4 = joint_soft * 0.7 + cap_soft * 0.15 + v_soft * 0.15
-            if args.dataset == "vqa":
-                score0 += compute_score_with_logits(pred0, target, device).sum()
-                score1 += compute_score_with_logits(pred1, target, device).sum()
-                score2 += compute_score_with_logits(pred2, target, device).sum()
-                score3 += compute_score_with_logits(pred3, target, device).sum()
-                score4 += compute_score_with_logits(pred4, target, device).sum()
-            else:
-                score0 += (pred0.argmax(1) == target.data).sum().item()
-                score1 += (pred1.argmax(1) == target.data).sum().item()
-                score2 += (pred2.argmax(1) == target.data).sum().item()
-                score3 += (pred3.argmax(1) == target.data).sum().item()
-                score4 += (pred4.argmax(1) == target.data).sum().item()
-
+            score0 += compute_score_with_logits(pred0, target, device).sum()
             num_examples += v.size(0)
-            pbar.set_postfix(score0='{:^7.3f}'.format(score0 / num_examples * 100),
-                             score1='{:^7.3f}'.format(score1 / num_examples * 100),
-                             score2='{:^7.3f}'.format(score2 / num_examples * 100),
-                             score3='{:^7.3f}'.format(score3 / num_examples * 100),
-                             score4='{:^7.3f}'.format(score4 / num_examples * 100),
-                             )
+
+            pbar.set_postfix(score0='{:^7.3f}'.format(score0 / num_examples * 100))
             pbar.update()
 
-    return score0 / num_examples, score1 / num_examples, score2 / num_examples, score3 / num_examples, score4 / num_examples
+    for i in range(0, 11, 2):
+        for j in range(0, 11, 2):
+            a = i / 10
+            b = j / 10
+            c = 1 - a - b
+            if a + b <= 1:
+                scores[str(a) + ',' + str(b) + ',' + "{:^2.1f}".format(c)] /= num_examples
+    return score0 / num_examples, scores
 
 
 def evaluate(model, eval_loader, args, device=torch.device("cuda")):
@@ -129,7 +134,8 @@ def evaluate(model, eval_loader, args, device=torch.device("cuda")):
         state_dict = checkpoint.get('model_state_dict', checkpoint)
         model.load_state_dict(state_dict)
 
-    scores = evaluate_by_logits_key(model, eval_loader, args, device)
+    score0, scores = evaluate_by_logits_key(model, eval_loader, args, device)
     logger = utils.Logger(os.path.join('eval', 'log.txt'))
-    logger.write('%s: score0=%7.3f,score1=%7.3f,score2=%7.3f,score3=%7.3f,score4=%7.3f' % (
-        args.checkpoint, scores[0] * 100, scores[1] * 100, scores[2] * 100, scores[3] * 100, scores[4] * 100))
+    print(scores)
+    logger.write('%s: score0=%7.3f' % (args.checkpoint, score0 * 100))
+    logger.write(scores)
