@@ -319,7 +319,7 @@ if __name__ == '__main__':
                 matched_state_dict['module.right_classifier.main.3.weight_v'] = matched_state_dict[
                                                                                     'module.right_classifier.main.3.weight_v'][
                                                                                 :1852]
-            if args.dataset == 'clevr':
+            elif args.dataset == 'clevr':
                 matched_state_dict['module.classifier.main.3.bias'] = matched_state_dict[
                                                                           'module.classifier.main.3.bias'][
                                                                       :28]
@@ -337,7 +337,7 @@ if __name__ == '__main__':
                 matched_state_dict['module.right_classifier.main.3.weight_v'] = matched_state_dict[
                                                                                     'module.right_classifier.main.3.weight_v'][
                                                                                 :28]
-            if args.dataset == 'vqa1.0':
+            elif args.dataset == 'vqa1.0':
                 matched_state_dict['module.classifier.main.3.bias'] = matched_state_dict[
                                                                           'module.classifier.main.3.bias'][
                                                                       :2185]
@@ -356,11 +356,7 @@ if __name__ == '__main__':
                 matched_state_dict['module.right_classifier.main.3.weight_v'] = matched_state_dict[
                                                                                     'module.right_classifier.main.3.weight_v'][
                                                                                 :2185]
-        else:
-            matched_state_dict['module.v_relation.v_transform.main.0.weight_v'] = F.pad(
-                matched_state_dict['module.v_relation.v_transform.main.0.weight_v'],
-                (0, 2054 - 2048,
-                 0, 0))
+
 
         # matched_state_dict['module.q_emb.rnn.rnn.weight_ih_l0'] = matched_state_dict['module.q_emb.rnn.rnn.weight_ih_l0'][:,:300]
         # matched_state_dict['module.cap_emb.rnn.rnn.weight_ih_l0'] = matched_state_dict['module.cap_emb.rnn.rnn.weight_ih_l0'][:,:300]

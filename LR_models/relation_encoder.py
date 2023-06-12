@@ -174,10 +174,6 @@ class ImplicitRelationEncoder(nn.Module):
                 L_film = self.film(imp_cap_rel)  # [batch, num_rois, out_dim * 2]
                 R_film = self.film(imp_v_rel)  # [batch, num_rois, out_dim * 2]
 
-            # gs = slice(0, self.out_dim)
-            # bs = slice(self.out_dim, (2 * self.out_dim))
-            # imp_v_rel = torch.mul(imp_v_rel, L_film[:, :, gs]) + L_film[:, :, bs]
-            # imp_cap_rel = torch.mul(imp_cap_rel, R_film[:, :, gs]) + R_film[:, :, bs]
             imp_v_rel = torch.mul(imp_v_rel, L_film[0]) + L_film[1]
             imp_cap_rel = torch.mul(imp_cap_rel, R_film[0]) + R_film[1]
 
